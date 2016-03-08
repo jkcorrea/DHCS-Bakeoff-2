@@ -32,6 +32,7 @@ protected static SpellChecker spellChecker = null;
 
 //Autocompleter code
 protected static SuggestTree autoCompleter;
+String[] suggestions = {"","","",""};
 
 //You can modify anything in here. This is just a basic implementation.
 void setup()
@@ -53,10 +54,9 @@ void setup()
   for(int i = 0; i < words.length; i++)
     freqDict.put(words[i].trim(), parseInt(counts[i]));
   
-  autoCompleter = new SuggestTree(5);
+  autoCompleter = new SuggestTree(4);
   for (String word : freqDict.keySet())
   {
-    System.out.print(word);
     autoCompleter.put(word, freqDict.get(word));
   }
   
@@ -115,11 +115,39 @@ void draw()
 
     //my draw code
     textAlign(CENTER);
-    text("" + currentLetter, 200+sizeOfInputArea/2, 200+sizeOfInputArea/3); //draw current letter
+    //draw entier container
+    fill(0, 0, 0);
+    stroke(255);
+    strokeWeight(5);
+    rect(200, 200, sizeOfInputArea, sizeOfInputArea);
+    strokeWeight(0);
+    
+    //drawing the container for the suggestions
+    fill(255, 255, 255);
+    rect(200, 200, sizeOfInputArea, sizeOfInputArea/2);
+    stroke(0);
+    strokeWeight(5);
+    line(200+sizeOfInputArea/2, 200, 200+sizeOfInputArea/2, 200+sizeOfInputArea/2);
+    line(200, 200+sizeOfInputArea/4, 200+sizeOfInputArea, 200+sizeOfInputArea/4);
+    strokeWeight(0);
+    
+    //drawing the suggestions
+    fill(0, 0, 0);
+    text("" + suggestions[0], 200+sizeOfInputArea/4, 200+sizeOfInputArea/8); 
+    text("" + suggestions[1], 200+3*sizeOfInputArea/4, 200+sizeOfInputArea/8);
+    text("" + suggestions[2], 200+sizeOfInputArea/4, 200+ 3 * sizeOfInputArea/8);
+    text("" + suggestions[3], 200+3*sizeOfInputArea/4, 200+ 3 * sizeOfInputArea/8);
+    
+
+    fill(0, 0, 0);
+    rect(200, 200+sizeOfInputArea/2, sizeOfInputArea, sizeOfInputArea/4); //draw the container for the current letter
     fill(255, 0, 0);
-    rect(200, 200+sizeOfInputArea/2, sizeOfInputArea/2, sizeOfInputArea/2); //draw left red button
+    rect(200, 200+3*sizeOfInputArea/4, sizeOfInputArea/2, sizeOfInputArea/4); //draw left red button
+    fill(255, 255, 255);
+    text("" + currentLetter, 200+sizeOfInputArea/2, 200+5*sizeOfInputArea/8); //draw current letter
+
     fill(0, 255, 0);
-    rect(200+sizeOfInputArea/2, 200+sizeOfInputArea/2, sizeOfInputArea/2, sizeOfInputArea/2); //draw right green button
+    rect(200+sizeOfInputArea/2, 200+3*sizeOfInputArea/4, sizeOfInputArea/2, sizeOfInputArea/4); //draw right green button
   }
   
 }
@@ -132,22 +160,43 @@ boolean didMouseClick(float x, float y, float w, float h) //simple function to d
 
 void mousePressed()
 {
-
-  if (didMouseClick(200, 200+sizeOfInputArea/2, sizeOfInputArea/2, sizeOfInputArea/2)) //check if click in left button
+  if (didMouseClick(200, 200, sizeOfInputArea/2, sizeOfInputArea/4)) //check if clicked a suggestion
+  {
+    completeWord(suggestions[0]);
+    clearSuggestions();
+  }
+  if (didMouseClick(200+sizeOfInputArea/2, 200, sizeOfInputArea/2, sizeOfInputArea/4)) //check if clicked a suggestion
+  {
+    completeWord(suggestions[1]);
+    clearSuggestions();
+  }
+  if (didMouseClick(200, 200+sizeOfInputArea/4, sizeOfInputArea/2, sizeOfInputArea/4)) //check if clicked a suggestion
+  {
+    completeWord(suggestions[2]);
+    clearSuggestions();
+  }
+  if (didMouseClick(200+sizeOfInputArea/2, 200+sizeOfInputArea/4, sizeOfInputArea/2, sizeOfInputArea/4)) //check if clicked a suggestion
+  {
+    completeWord(suggestions[3]);
+    clearSuggestions();
+  }
+  
+  
+  if (didMouseClick(200, 200+3*sizeOfInputArea/4, sizeOfInputArea/2, sizeOfInputArea/4)) //check if click in left button
   {
     currentLetter --;
     if (currentLetter<'_') //wrap around to z
       currentLetter = 'z';
   }
 
-  if (didMouseClick(200+sizeOfInputArea/2, 200+sizeOfInputArea/2, sizeOfInputArea/2, sizeOfInputArea/2)) //check if click in right button
+  if (didMouseClick(200+sizeOfInputArea/2, 200+3*sizeOfInputArea/4, sizeOfInputArea/2, sizeOfInputArea/4)) //check if click in right button
   {
     currentLetter ++;
     if (currentLetter>'z') //wrap back to space (aka underscore)
       currentLetter = '_';
   }
 
-  if (didMouseClick(200, 200, sizeOfInputArea, sizeOfInputArea/2)) //check if click occured in letter area
+  if (didMouseClick(200, 200+sizeOfInputArea/2, sizeOfInputArea, sizeOfInputArea/4)) //check if click occured in letter area
   {
     if (currentLetter=='_') //if underscore, consider that a space bar
       currentTyped+=" ";
@@ -156,15 +205,29 @@ void mousePressed()
     else if (currentLetter!='`') //if not any of the above cases, add the current letter to the typed string & generate spellchecks
     {
       currentTyped+=currentLetter;
+      
+      //Autocomplete & spellchecker code
       String currentWord = getCurrentWord(currentTyped); //gets the word we are currently typing
       if(currentWord.trim() != ""){
         SuggestTree.Node wordNode = autoCompleter.getAutocompleteSuggestions(currentWord);
         if(wordNode != null)
         {
           for(int i = 0; i < wordNode.listLength(); i++)
-            System.out.println(wordNode.getSuggestion(i).getTerm());
+          {
+            if(i < suggestions.length)
+            {
+              suggestions[i] = wordNode.getSuggestion(i).getTerm();
+              System.out.println(suggestions[i]);
+            }
+          }
         }
-        System.out.println(spellChecker.getSuggestions(currentWord, 2));
+        /*
+        String[] spellCheckSuggestions = (String[])spellChecker.getSuggestions(currentWord, 2).toArray();
+        for(int i = wordNode.listLength(); i < suggestions.length; i++)
+        {
+          suggestions[i] = spellCheckSuggestions[i-wordNode.listLength()];
+        }
+        */
       }
     }
   }
@@ -179,6 +242,19 @@ void mousePressed()
 public String getCurrentWord(String sentence)
 {
   return sentence.substring(sentence.lastIndexOf(" ")+1);
+}
+
+public void completeWord(String word)
+{
+  currentTyped = currentTyped.substring(0, currentTyped.lastIndexOf(" ")+1) + word + " ";
+}
+
+public void clearSuggestions()
+{
+  for(int i = 0; i < suggestions.length; i++)
+  {
+    suggestions[i] = "";
+  }
 }
 
 void nextTrial()
