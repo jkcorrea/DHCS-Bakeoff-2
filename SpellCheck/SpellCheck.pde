@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Collections;
 
 String[] phrases; //contains all of the phrases
@@ -29,6 +30,9 @@ char currentLetter = 'a';
 protected static SpellDictionaryHashMap dictionary = null;
 protected static SpellChecker spellChecker = null;
 
+//Autocompleter code
+protected static SuggestTree autoCompleter;
+
 //You can modify anything in here. This is just a basic implementation.
 void setup()
 {
@@ -40,6 +44,21 @@ void setup()
     e.printStackTrace();
   }
   spellChecker = new SpellChecker(dictionary);
+  
+  //setting up the autocompleter
+  String[] words = loadStrings("autoCompleteWords.txt"); //load the phrase set into memory
+  String[] counts = loadStrings("autoCompleteCounts.txt"); //load the phrase set into memory
+  
+  Map<String, Integer> freqDict = new HashMap<String, Integer>();
+  for(int i = 0; i < words.length; i++)
+    freqDict.put(words[i].trim(), parseInt(counts[i]));
+  
+  autoCompleter = new SuggestTree(5);
+  for (String word : freqDict.keySet())
+  {
+    System.out.print(word);
+    autoCompleter.put(word, freqDict.get(word));
+  }
   
   phrases = loadStrings("phrases2.txt"); //load the phrase set into memory
   Collections.shuffle(Arrays.asList(phrases)); //randomize the order of the phrases
@@ -53,7 +72,6 @@ void setup()
 //You can modify anything in here. This is just a basic implementation.
 void draw()
 {
-  System.out.print(spellChecker.getSuggestions("LOTSA", 1));
   background(0); //clear background
 
  // image(watch,-200,200);
@@ -135,8 +153,20 @@ void mousePressed()
       currentTyped+=" ";
     else if (currentLetter=='`' & currentTyped.length()>0) //if `, treat that as a delete command
       currentTyped = currentTyped.substring(0, currentTyped.length()-1);
-    else if (currentLetter!='`') //if not any of the above cases, add the current letter to the typed string
+    else if (currentLetter!='`') //if not any of the above cases, add the current letter to the typed string & generate spellchecks
+    {
       currentTyped+=currentLetter;
+      String currentWord = getCurrentWord(currentTyped); //gets the word we are currently typing
+      if(currentWord.trim() != ""){
+        SuggestTree.Node wordNode = autoCompleter.getAutocompleteSuggestions(currentWord);
+        if(wordNode != null)
+        {
+          for(int i = 0; i < wordNode.listLength(); i++)
+            System.out.println(wordNode.getSuggestion(i).getTerm());
+        }
+        System.out.println(spellChecker.getSuggestions(currentWord, 2));
+      }
+    }
   }
 
   //You are allowed to have a next button outside the 2" area
@@ -146,6 +176,10 @@ void mousePressed()
   }
 }
 
+public String getCurrentWord(String sentence)
+{
+  return sentence.substring(sentence.lastIndexOf(" ")+1);
+}
 
 void nextTrial()
 {
