@@ -34,6 +34,11 @@ protected static SpellChecker spellChecker = null;
 protected static SuggestTree autoCompleter;
 String[] suggestions = {"","","",""};
 
+//Text needle code
+int time;
+boolean tick;
+int wait = 500;
+
 //You can modify anything in here. This is just a basic implementation.
 void setup()
 {
@@ -49,6 +54,9 @@ void setup()
   //setting up the autocompleter
   String[] words = loadStrings("autoCompleteWords.txt"); //load the phrase set into memory
   String[] counts = loadStrings("autoCompleteCounts.txt"); //load the phrase set into memory
+  
+  //Setting up the timer
+  time = millis();//store the current time
   
   Map<String, Integer> freqDict = new HashMap<String, Integer>();
   for(int i = 0; i < words.length; i++)
@@ -106,7 +114,17 @@ void draw()
     text("Phrase " + (currTrialNum+1) + " of " + totalTrialNum, 70, 50); //draw the trial count
     fill(255);
     text("Target:   " + currentPhrase, 70, 100); //draw the target string
-    text("Entered:  " + currentTyped, 70, 140); //draw what the user has entered thus far 
+    
+    
+    if(millis() - time >= wait){
+      tick = !tick;//if it is, do something
+      time = millis();//also update the stored time
+    }
+    if(tick)
+      text("Entered:  " + currentTyped + "|", 70, 140); //draw what the user has entered thus far 
+    else
+      text("Entered:  " + currentTyped, 70, 140); //draw what the user has entered thus far 
+
     fill(255, 0, 0);
     rect(800, 00, 200, 200); //drag next button
     fill(255);
