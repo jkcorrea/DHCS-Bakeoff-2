@@ -1,9 +1,9 @@
 import java.util.Arrays;
 import java.util.Collections;
 
-final static int DPI = 166; // you will need to look up the DPI or PPI of your device to make sure you get the right scale!!
+final static int DPI = 320; // you will need to look up the DPI or PPI of your device to make sure you get the right scale!!
 final static float SIZE_OF_INPUT_AREA = DPI * 1; // aka, 1.0 inches square!
-final static int WATCHFACE_CORNER_RADIUS = 7;
+final static int WATCHFACE_CORNER_RADIUS = 10;
 final static int INPUT_AREA_X = 200;
 final static int INPUT_AREA_Y = 500;
 final static char[] ALPHABET = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
@@ -27,7 +27,7 @@ void setup() {
   Collections.shuffle(Arrays.asList(phrases)); // randomize the order of the phrases
 
   orientation(PORTRAIT); // can also be LANDSCAPE -- sets orientation on android device
-  size(1000, 1000); //Sets the size of the app. You may want to modify this to your device. Many phones today are 1080 wide by 1920 tall.
+  size(displayWidth, displayHeight); //Sets the size of the app. You may want to modify this to your device. Many phones today are 1080 wide by 1920 tall.
   textFont(createFont("Arial", 24)); // set the font to arial 24
   noStroke(); // my code doesn't use any strokes.
 
@@ -35,14 +35,14 @@ void setup() {
 }
 
 void setupKeyboard() {
-  float radius = (SIZE_OF_INPUT_AREA / 2) - 10;
-  float originX = INPUT_AREA_X + radius + 10;
-  float originY = INPUT_AREA_Y + radius + 11;
+  float radius = (SIZE_OF_INPUT_AREA / 2) - 25;
+  float originX = INPUT_AREA_X + radius + 25;
+  float originY = INPUT_AREA_Y + radius + 25;
   float arclength = 0;
-  float w = 17.5;
+  float letterSpacing = 16.2;
 
   for (int i = 0; i < ALPHABET.length; i++) {
-    arclength += w / 2;
+    arclength += letterSpacing;
     float theta = arclength / radius;
     float x = originX + (radius * cos(theta));
     float y = originY + (radius * sin(theta));
@@ -51,7 +51,7 @@ void setupKeyboard() {
     keyPositions[i] = new PVector(x, y);
 
     // Move halfway again
-    arclength += w / 2;
+    arclength += letterSpacing;
   }
 }
 
@@ -97,10 +97,8 @@ void draw() {
   // Draw the keyboard
     fill(255);
     textAlign(CENTER);
-    textFont(createFont("Arial", 12));
     for (int i = 0; i < ALPHABET.length; i++)
       text(ALPHABET[i], keyPositions[i].x, keyPositions[i].y);
-    textFont(createFont("Arial", 24));
 }
 
 void mousePressed() {
@@ -205,4 +203,3 @@ int computeLevenshteinDistance(String phrase1, String phrase2)  {
 
   return distance[phrase1.length()][phrase2.length()];
 }
-
