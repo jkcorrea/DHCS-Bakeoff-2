@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Collections;
 
 
-final static int DPI = 320; // you will need to look up the DPI or PPI of your device to make sure you get the right scale!!
+final static int DPI = 577; // you will need to look up the DPI or PPI of your device to make sure you get the right scale!!
 final static float SIZE_OF_INPUT_AREA = DPI * 1; // aka, 1.0 inches square!
 final static int WATCHFACE_CORNER_RADIUS = 10;
 final static int INPUT_AREA_X = 200;
@@ -72,7 +72,7 @@ void setupKeyboard() {
   float originX = INPUT_AREA_X + radius + 25;
   float originY = INPUT_AREA_Y + radius + 25;
   float arclength = 0;
-  float letterSpacing = 16.2;
+  float letterSpacing = 29.2;
 
   for (int i = 0; i < ALPHABET.length; i++) {
     arclength += letterSpacing;
@@ -203,29 +203,17 @@ void drawSuggestions()
 void mousePressed() {
 
   // Check if the user clicked on the autocomplete entry
-  if (didMouseClick(INPUT_AREA_X, INPUT_AREA_Y, SIZE_OF_INPUT_AREA/2, SIZE_OF_INPUT_AREA/4)) //check if clicked a suggestion
+  for(int i = 0; i < autoRows; i++)
   {
-    completeWord(suggestions[0]);
-    clearSuggestions();
-    return;
-  }
-  if (didMouseClick(INPUT_AREA_X+SIZE_OF_INPUT_AREA/2, INPUT_AREA_Y, SIZE_OF_INPUT_AREA/2, SIZE_OF_INPUT_AREA/4)) //check if clicked a suggestion
-  {
-    completeWord(suggestions[1]);
-    clearSuggestions();
-    return;
-  }
-  if (didMouseClick(INPUT_AREA_X, INPUT_AREA_Y+SIZE_OF_INPUT_AREA/4, SIZE_OF_INPUT_AREA/2, SIZE_OF_INPUT_AREA/4)) //check if clicked a suggestion
-  {
-    completeWord(suggestions[2]);
-    clearSuggestions();
-    return;
-  }
-  if (didMouseClick(INPUT_AREA_X+SIZE_OF_INPUT_AREA/2, INPUT_AREA_Y+SIZE_OF_INPUT_AREA/4, SIZE_OF_INPUT_AREA/2, SIZE_OF_INPUT_AREA/4)) //check if clicked a suggestion
-  {
-    completeWord(suggestions[3]);
-    clearSuggestions();
-    return;
+    for(int j = 0; j < autoCols; j++)
+    {
+      if (didMouseClick(autoXPos + (i*autoWidth/autoCols), autoYPos, autoWidth/autoCols, autoHeight/autoRows + (j*autoHeight/autoRows) )) //check if clicked a suggestion
+      {
+        completeWord(suggestions[i * (int)autoCols + j]);
+        clearSuggestions();
+        return;
+      }
+    }
   }
   
   // Check for user input
