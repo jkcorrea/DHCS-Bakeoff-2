@@ -26,9 +26,9 @@ final float sizeOfInputArea = DPIofYourDeviceScreen*1; //aka, 1.0 inches square!
 //Variables for my silly implementation. You can delete this:
 char currentLetter = 'a';
 
-//Spellchecker code
-protected static SpellDictionaryHashMap dictionary = null;
-protected static SpellChecker spellChecker = null;
+//Spellchecker code [not working atm]
+//protected static SpellDictionaryHashMap dictionary = null;
+//protected static SpellChecker spellChecker = null;
 
 //Autocompleter code
 protected static SuggestTree autoCompleter;
@@ -43,13 +43,14 @@ int wait = 500;
 void setup()
 {
   //Setting up the spell checker
-  try {
+  /*try {
     dictionary = new SpellDictionaryHashMap(new File( dataPath("") + "/words.txt"));
   }
   catch (IOException e) {
     e.printStackTrace();
   }
   spellChecker = new SpellChecker(dictionary);
+  */
   
   //setting up the autocompleter
   String[] words = loadStrings("autoCompleteWords.txt"); //load the phrase set into memory
@@ -155,7 +156,6 @@ void draw()
     text("" + suggestions[1], 200+3*sizeOfInputArea/4, 200+sizeOfInputArea/8);
     text("" + suggestions[2], 200+sizeOfInputArea/4, 200+ 3 * sizeOfInputArea/8);
     text("" + suggestions[3], 200+3*sizeOfInputArea/4, 200+ 3 * sizeOfInputArea/8);
-    
 
     fill(0, 0, 0);
     rect(200, 200+sizeOfInputArea/2, sizeOfInputArea, sizeOfInputArea/4); //draw the container for the current letter
