@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Collections;
 
 
-final static int DPI = 577; // you will need to look up the DPI or PPI of your device to make sure you get the right scale!!
+final static int DPI = 320; // you will need to look up the DPI or PPI of your device to make sure you get the right scale!!
 final static float SIZE_OF_INPUT_AREA = DPI * 1; // aka, 1.0 inches square!
 final static int WATCHFACE_CORNER_RADIUS = 10;
 final static int INPUT_AREA_X = 200;
@@ -72,7 +72,7 @@ void setupKeyboard() {
   float originX = INPUT_AREA_X + radius + 25;
   float originY = INPUT_AREA_Y + radius + 25;
   float arclength = 0;
-  float letterSpacing = 29.2;
+  float letterSpacing = 16.2;//29.2;
 
   for (int i = 0; i < ALPHABET.length; i++) {
     arclength += letterSpacing;
@@ -101,9 +101,9 @@ void setupAutoComplete()
   //Setting up the timer
   time = millis();//store the current time
   
-  Map<String, Integer> freqDict = new HashMap<String, Integer>();
+  Map<String, Long> freqDict = new HashMap<String, Long>();
   for(int i = 0; i < words.length; i++)
-    freqDict.put(words[i].trim(), parseInt(counts[i]));
+    freqDict.put(words[i].trim(), Long.parseLong(counts[i]));
   
   autoCompleter = new SuggestTree((int) autoCols * (int) autoRows);
   for (String word : freqDict.keySet())

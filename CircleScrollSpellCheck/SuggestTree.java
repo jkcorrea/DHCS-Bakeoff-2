@@ -120,7 +120,7 @@ public class SuggestTree {
      * or much too long (longer than 32767 characters)
      * @throws NullPointerException if the specified term is null
      */
-    public void put(String term, int weight) {
+    public void put(String term, long weight) {
         if(term.isEmpty() || term.length() > Short.MAX_VALUE)
             throw new IllegalArgumentException();
         if(root == null) {
@@ -303,7 +303,7 @@ public class SuggestTree {
     }
     
     private void randomizeDeletion(Node n) {
-        int p = n.entry.priority;
+        long p = n.entry.priority;
         n.entry.priority = Integer.MIN_VALUE;
         while(n != null && n.priority == p) {
             n.priority = higherPriority(n.entry, n.mid);
@@ -319,7 +319,7 @@ public class SuggestTree {
         }
     }
     
-    private int higherPriority(Entry e, Node n) {
+    private long higherPriority(Entry e, Node n) {
         if(e == null)
             return n.priority;
         else if(n == null)
@@ -395,7 +395,7 @@ public class SuggestTree {
         }
     }
     
-    private void increaseWeight(Node n, int newWeight) {
+    private void increaseWeight(Node n, long newWeight) {
         Entry e = n.entry;
         e.weight = newWeight;
         for( ; n != null; n = parent(n)) {
@@ -414,7 +414,7 @@ public class SuggestTree {
         }
     }
     
-    private void reduceWeight(Node n, int newWeight) {
+    private void reduceWeight(Node n, long newWeight) {
         Entry e = n.entry;
         e.weight = newWeight;
         for( ; n != null; n = parent(n)) {
@@ -585,11 +585,11 @@ public class SuggestTree {
         private Entry entry;
         private char firstChar;
         private short charEnd;
-        private int priority;
+        private long priority;
         private Node left, mid, right;
         private Node up; // parent in the ternary search tree
         
-        private Node(String term, int weight, int charStart, Node up) {
+        private Node(String term, long weight, int charStart, Node up) {
             entry = new Entry(term, weight);
             firstChar = term.charAt(charStart);
             charEnd = (short) term.length();
@@ -652,10 +652,10 @@ public class SuggestTree {
     public static class Entry {
         
         private final String term;
-        private int weight;
-        private int priority;
+        private long weight;
+        private long priority;
         
-        private Entry(String term, int weight) {
+        private Entry(String term, long weight) {
             this.term = term;
             this.weight = weight;
         }
@@ -674,7 +674,7 @@ public class SuggestTree {
          * 
          * @return the weight of the term
          */
-        public int getWeight() {
+        public long getWeight() {
             return weight;
         }
     }
