@@ -112,27 +112,33 @@ void draw() {
 }
 
 void drawKeyboard() {
-  float fontSize =
   fill(255);
   textAlign(CENTER);
-  textFont(createFont("Arial", KEYBOARD_FONT_SIZE)); // set the font to arial 24
 
   for (int i = 0; i < ALPHABET.length; i++) {
     float dist = keyPositions[i].dist(new PVector(mouseX, mouseY));
+    float keyboardFontSize = KEYBOARD_FONT_SIZE;
     if (dist <= KEY_RESIZE_THRESHOLD) {
-
+      keyboardFontSize = KEYBOARD_FONT_SIZE * 25/dist;
+      
+      if(keyboardFontSize > KEYBOARD_FONT_SIZE * 3)
+        keyboardFontSize = KEYBOARD_FONT_SIZE * 3;
+      if (keyboardFontSize < KEYBOARD_FONT_SIZE)
+        keyboardFontSize = KEYBOARD_FONT_SIZE;
     }
-    text(ALPHABET[i], keyPositions[i].x, keyPositions[i].y);
+    textFont(createFont("Arial", keyboardFontSize)); // set the font to arial 24
+    
+    text(ALPHABET[i], keyPositions[i].x, keyPositions[i].y + keyboardFontSize/4);
   }
 
-  textFont(createFont("Arial", 24)); // set the font to arial 24
+  textFont(createFont("Arial", KEYBOARD_FONT_SIZE)); // set the font to arial 24
 }
 
 void mousePressed() {
 
   // Check for user input
   if (didMouseClick(INPUT_AREA_X, INPUT_AREA_Y, SIZE_OF_INPUT_AREA, SIZE_OF_INPUT_AREA)) {
-    getNearestKey();
+    currentTyped+=getNearestKey();
   }
 
   // Check if click is in next button
@@ -145,7 +151,7 @@ void mousePressed() {
 boolean didMouseClick(float x, float y, float w, float h) { return (mouseX > x && mouseX < x + w && mouseY > y && mouseY < y + h); }
 
 // get the nearest key to the current mouse
-int getNearestKey() {
+char getNearestKey() {
   PVector origin = new PVector(mouseX, mouseY);
   int nearest = 0;
   float currDist = MAX_FLOAT;
@@ -158,8 +164,7 @@ int getNearestKey() {
     }
   }
 
-  println(ALPHABET[nearest]);
-  return nearest;
+  return Character.toLowerCase(ALPHABET[nearest]);
 }
 
 
