@@ -156,7 +156,6 @@ void draw()
     text("" + suggestions[1], 200+3*sizeOfInputArea/4, 200+sizeOfInputArea/8);
     text("" + suggestions[2], 200+sizeOfInputArea/4, 200+ 3 * sizeOfInputArea/8);
     text("" + suggestions[3], 200+3*sizeOfInputArea/4, 200+ 3 * sizeOfInputArea/8);
-    
 
     fill(0, 0, 0);
     rect(200, 200+sizeOfInputArea/2, sizeOfInputArea, sizeOfInputArea/4); //draw the container for the current letter
