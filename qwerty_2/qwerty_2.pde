@@ -252,7 +252,7 @@ void mousePressed() {
   int i;
   
   // Check if click is in next button
-  if (didMouseClick(800, 00, 200, 200)) {
+  if (didMouseClick(1000, 100, 200, 200)) {
     nextTrial(); // if so, advance to next trial
   }
   else if (didMouseClick(INPUT_AREA_X, INPUT_AREA_Y + SIZE_OF_INPUT_AREA - 2*height, half, 2 * height)){
@@ -264,7 +264,7 @@ void mousePressed() {
     currentTyped = currentTyped.substring(0, currentTyped.length()-1);
   }
   else if (left){
-    if (didMouseClick(INPUT_AREA_X, INPUT_AREA_Y, SIZE_OF_INPUT_AREA, offsetY)) {
+    if (didMouseClick(INPUT_AREA_X, INPUT_AREA_Y, SIZE_OF_INPUT_AREA, offsetY - (13 * DPI_SCALE))) {
       //if clicked back
       left = false;
       right = true;
@@ -276,7 +276,7 @@ void mousePressed() {
   }
   
   else if (right){
-    if (didMouseClick(INPUT_AREA_X, INPUT_AREA_Y, SIZE_OF_INPUT_AREA, offsetY)) {
+    if (didMouseClick(INPUT_AREA_X, INPUT_AREA_Y, SIZE_OF_INPUT_AREA, offsetY - (13 * DPI_SCALE))) {
       //if clicked back
       left = true;
       right = false;
