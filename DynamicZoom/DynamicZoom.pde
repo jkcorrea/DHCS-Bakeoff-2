@@ -14,7 +14,7 @@ final static int THIRD_ROW_LENGTH = 7;
 final static int ROW_SPACING = 30;
 final static int LETTER_SPACING = 8;
 final static int KEYBOARD_FONT_SIZE = 16;
-final static float KEY_RESIZE_THRESHOLD = 100;
+final static float KEY_RESIZE_THRESHOLD = 25;
 
 PVector[] keyPositions = new PVector[ALPHABET.length];
 
@@ -112,23 +112,33 @@ void draw() {
 }
 
 void drawKeyboard() {
-  fill(255);
   textAlign(CENTER);
+  rectMode(CENTER);
+
+  char nearest = Character.toUpperCase(getNearestKey());
 
   for (int i = 0; i < ALPHABET.length; i++) {
     float dist = keyPositions[i].dist(new PVector(mouseX, mouseY));
-    float keyboardFontSize = KEYBOARD_FONT_SIZE;
+    float scaleFactor = 1;
+
     if (dist <= KEY_RESIZE_THRESHOLD && mousePressed) {
-      // clamp font size between default and 3x
-      float scale = (KEYBOARD_FONT_SIZE * 25) / dist;
-      keyboardFontSize = max(KEYBOARD_FONT_SIZE, min(KEYBOARD_FONT_SIZE * 3, KEYBOARD_FONT_SIZE * 25/dist));
+      // clamp scalingFactor between default and 3x
+      scaleFactor = constrain(-(2*log(dist)/log(20)) + 3, 1, 2);
     }
 
-    textFont(createFont("Arial", keyboardFontSize));
-    text(ALPHABET[i], keyPositions[i].x, keyPositions[i].y - keyboardFontSize);
+    float y = keyPositions[i].y - constrain(100 * scaleFactor - 100, 0, 35);
+    stroke(0,0,0);
+    fill((nearest == ALPHABET[i] && mousePressed) ? #00FF00 : #FFFFFF);
+    rect(keyPositions[i].x, y - (5 * scaleFactor), KEYBOARD_FONT_SIZE * scaleFactor, KEYBOARD_FONT_SIZE * 1.5 * scaleFactor);
+    noStroke();
+
+    fill(0);
+    textFont(createFont("Arial", KEYBOARD_FONT_SIZE * scaleFactor));
+    text(ALPHABET[i], keyPositions[i].x, y);
   }
 
   textFont(createFont("Arial", KEYBOARD_FONT_SIZE)); // reset the font
+  rectMode(CORNER);
 }
 
 void mousePressed() {
