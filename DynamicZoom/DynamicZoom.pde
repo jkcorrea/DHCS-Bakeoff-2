@@ -126,10 +126,18 @@ void drawKeyboard() {
       scaleFactor = constrain(-(2*log(dist)/log(20)) + 3, 1, 2);
     }
 
+    float x = keyPositions[i].x;
     float y = keyPositions[i].y - constrain(100 * scaleFactor - 100, 0, 35);
+    float w = KEYBOARD_FONT_SIZE * scaleFactor;
+    float h = KEYBOARD_FONT_SIZE * 1.5 * scaleFactor;
     stroke(0,0,0);
-    fill((nearest == ALPHABET[i] && mousePressed) ? #00FF00 : #FFFFFF);
-    rect(keyPositions[i].x, y - (5 * scaleFactor), KEYBOARD_FONT_SIZE * scaleFactor, KEYBOARD_FONT_SIZE * 1.5 * scaleFactor);
+    if (nearest == ALPHABET[i] && mousePressed &&
+        didMouseClick(INPUT_AREA_X, INPUT_AREA_Y, SIZE_OF_INPUT_AREA - 30, SIZE_OF_INPUT_AREA - 30)) {
+      fill(#00FF00);
+    } else {
+      fill(#FFFFFF);
+    }
+    rect(keyPositions[i].x, y - (5 * scaleFactor), w, h);
     noStroke();
 
     fill(0);
@@ -137,8 +145,14 @@ void drawKeyboard() {
     text(ALPHABET[i], keyPositions[i].x, y);
   }
 
-  textFont(createFont("Arial", KEYBOARD_FONT_SIZE)); // reset the font
+  // Spacebar
   rectMode(CORNER);
+  fill(#FF0000);
+  rect(INPUT_AREA_X, INPUT_AREA_Y + SIZE_OF_INPUT_AREA - 30, SIZE_OF_INPUT_AREA / 2, 30);
+  fill(176);
+  rect(INPUT_AREA_X + (SIZE_OF_INPUT_AREA / 2), INPUT_AREA_Y + SIZE_OF_INPUT_AREA - 30, SIZE_OF_INPUT_AREA / 2, 30);
+
+  textFont(createFont("Arial", KEYBOARD_FONT_SIZE)); // reset font
 }
 
 void mousePressed() {
@@ -149,9 +163,18 @@ void mousePressed() {
 }
 
 void mouseReleased() {
-  // Check for user input
-  if (didMouseClick(INPUT_AREA_X, INPUT_AREA_Y, SIZE_OF_INPUT_AREA, SIZE_OF_INPUT_AREA)) {
-    currentTyped+=getNearestKey();
+  // Ignore clicks outside of input area
+  if (!didMouseClick(INPUT_AREA_X, INPUT_AREA_Y, SIZE_OF_INPUT_AREA, SIZE_OF_INPUT_AREA)) return;
+
+  if (didMouseClick(INPUT_AREA_X, INPUT_AREA_Y + SIZE_OF_INPUT_AREA - 30, SIZE_OF_INPUT_AREA / 2, 30)) {
+    // Backspace clicked
+    currentTyped = currentTyped.substring(0, currentTyped.length() - 1);
+  } else if (didMouseClick(INPUT_AREA_X + (SIZE_OF_INPUT_AREA / 2), INPUT_AREA_Y + SIZE_OF_INPUT_AREA - 30, SIZE_OF_INPUT_AREA / 2, 30)) {
+    // Spacebar clicked
+    currentTyped += ' ';
+  } else {
+    // Assume key clicked
+    currentTyped += getNearestKey();
   }
 }
 
