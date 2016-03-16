@@ -1,8 +1,10 @@
 import java.util.Arrays;
 import java.util.Collections;
 
-// final static float DPI = 577; // For Ramya's Galaxy S6
-final static float DPI = 165.63; // For Roger's
+final static float DPI = 577; // For Ramya's Galaxy S6
+//final static float DPI = 165.63; // For Roger's
+final static float BASE_DPI = 165.63; 
+final static float DPI_SCALE = DPI / BASE_DPI;
 final static float SIZE_OF_INPUT_AREA = DPI * 1; // aka, 1.0 inches square!
 final static int INPUT_AREA_X = 200;
 final static int INPUT_AREA_Y = 500;
@@ -13,11 +15,13 @@ final static char[] RIGHT_ALPHA = {'Y','U','I','O','P','H','J','K','L','B','N','
 final static int FIRST_ROW_LENGTH = 10;
 final static int SECOND_ROW_LENGTH = 9;
 final static int THIRD_ROW_LENGTH = 7;
-final static int ROW_SPACING = 30;
-final static int LETTER_SPACING = 8;
-final static int HALF_LETTER_SPACING = 16;
-final static int KEYBOARD_FONT_SIZE = 16;
+final static int ROW_SPACING = 40 * (int)DPI_SCALE;
+final static int LETTER_SPACING = 8 * (int)DPI_SCALE;
+final static int HALF_LETTER_SPACING = 16 * (int)DPI_SCALE;
+final static float KEYBOARD_FONT_SIZE = 16 * (int)DPI_SCALE;
 final static float KEY_RESIZE_THRESHOLD = 100;
+final static float offsetY = ROW_SPACING + (20 * DPI_SCALE);
+
 
 PVector[] keyPositions = new PVector[ALPHABET.length];
 PVector[] leftKeyPositions = new PVector[ALPHABET.length];
@@ -34,7 +38,7 @@ float lettersExpectedTotal = 0; // a running total of the number of letters expe
 float errorsTotal = 0; // a running total of the number of errors (when hitting next)
 String currentPhrase = ""; // the current target phrase
 String currentTyped = ""; // what the user has typed so far
-boolean left = false;
+boolean left = true;
 boolean right = false;
 
 // You can modify anything in here. This is just a basic implementation.
@@ -44,91 +48,91 @@ void setup() {
 
   orientation(PORTRAIT); // can also be LANDSCAPE -- sets orientation on android device
   size(displayWidth, displayHeight); //Sets the size of the app. You may want to modify this to your device. Many phones today are 1080 wide by 1920 tall.
-  textFont(createFont("Arial", 24)); // set the font to arial 24
+  textFont(createFont("Arial", 24 * DPI_SCALE)); // set the font to arial 24
   noStroke(); // my code doesn't use any strokes.
 
-  setupKeyboard();
+  //setupKeyboard();
   setupLeftKeyboard();
   setupRightKeyboard();
 }
 
 void setupLeftKeyboard(){
-  float offsetX = 4;
-  float offsetY = ROW_SPACING + 35;
+  float offsetX = 4 * DPI_SCALE;
+  float offsety = offsetY;
   for (int i = 0; i < 5; i++) { //first row
     offsetX += HALF_LETTER_SPACING;
-    leftKeyPositions[i] = new PVector(INPUT_AREA_X + offsetX, INPUT_AREA_Y + offsetY);
+    leftKeyPositions[i] = new PVector(INPUT_AREA_X + offsetX, INPUT_AREA_Y + offsety);
     offsetX += HALF_LETTER_SPACING;
   }
 
-  offsetX = 15;
-  offsetY += ROW_SPACING;
+  offsetX = 15 * DPI_SCALE;
+  offsety += ROW_SPACING;
   for (int i = 0; i < 5; i++) { //second row
     offsetX += HALF_LETTER_SPACING;
-    leftKeyPositions[i + 5] = new PVector(INPUT_AREA_X + offsetX, INPUT_AREA_Y + offsetY);
+    leftKeyPositions[i + 5] = new PVector(INPUT_AREA_X + offsetX, INPUT_AREA_Y + offsety);
     offsetX += HALF_LETTER_SPACING;
   }
 
-  offsetX = 25;
-  offsetY += ROW_SPACING;
+  offsetX = 25 * DPI_SCALE;
+  offsety += ROW_SPACING;
   for (int i = 0; i < 4; i++) { //third row
     offsetX += HALF_LETTER_SPACING;
-    leftKeyPositions[i + 10] = new PVector(INPUT_AREA_X + offsetX, INPUT_AREA_Y + offsetY);
+    leftKeyPositions[i + 10] = new PVector(INPUT_AREA_X + offsetX, INPUT_AREA_Y + offsety);
     offsetX += HALF_LETTER_SPACING;
   }
 }
 
 void setupRightKeyboard(){
-  float offsetX = 5;
-  float offsetY = ROW_SPACING + 35;
+  float offsetX = 5 * DPI_SCALE;
+  float offsety = offsetY;
   for (int i = 0; i < 5; i++) { //first row
     offsetX += HALF_LETTER_SPACING;
-    rightKeyPositions[i] = new PVector(INPUT_AREA_X + offsetX, INPUT_AREA_Y + offsetY);
+    rightKeyPositions[i] = new PVector(INPUT_AREA_X + offsetX, INPUT_AREA_Y + offsety);
     offsetX += HALF_LETTER_SPACING;
   }
 
-  offsetX = 15;
-  offsetY += ROW_SPACING;
+  offsetX = 15 * DPI_SCALE;
+  offsety += ROW_SPACING;
   for (int i = 0; i < 4; i++) { //second row
     offsetX += HALF_LETTER_SPACING;
-    rightKeyPositions[i + 5] = new PVector(INPUT_AREA_X + offsetX, INPUT_AREA_Y + offsetY);
+    rightKeyPositions[i + 5] = new PVector(INPUT_AREA_X + offsetX, INPUT_AREA_Y + offsety);
     offsetX += HALF_LETTER_SPACING;
   }
 
-  offsetX = 25;
-  offsetY += ROW_SPACING;
+  offsetX = 25 * DPI_SCALE;
+  offsety += ROW_SPACING;
   for (int i = 0; i < 3; i++) { //third row
     offsetX += HALF_LETTER_SPACING;
-    rightKeyPositions[i + 9] = new PVector(INPUT_AREA_X + offsetX, INPUT_AREA_Y + offsetY);
+    rightKeyPositions[i + 9] = new PVector(INPUT_AREA_X + offsetX, INPUT_AREA_Y + offsety);
     offsetX += HALF_LETTER_SPACING;
   }
 }
 
-void setupKeyboard() {
-  float offsetX = 5;
-  float offsetY = ROW_SPACING + 35;
-  for (int i = 0; i < FIRST_ROW_LENGTH; i++) {
-    offsetX += LETTER_SPACING;
-    keyPositions[i] = new PVector(INPUT_AREA_X + offsetX, INPUT_AREA_Y + offsetY);
-    offsetX += LETTER_SPACING;
-  }
+//void setupKeyboard() {
+//  float offsetX = 5;
+//  float offsetY = ROW_SPACING + 35;
+//  for (int i = 0; i < FIRST_ROW_LENGTH; i++) {
+//    offsetX += LETTER_SPACING;
+//    keyPositions[i] = new PVector(INPUT_AREA_X + offsetX, INPUT_AREA_Y + offsetY);
+//    offsetX += LETTER_SPACING;
+//  }
 
-  offsetX = 15;
-  offsetY += ROW_SPACING;
-  for (int i = 0; i < SECOND_ROW_LENGTH; i++) {
-    offsetX += LETTER_SPACING;
-    keyPositions[i + FIRST_ROW_LENGTH] = new PVector(INPUT_AREA_X + offsetX, INPUT_AREA_Y + offsetY);
-    offsetX += LETTER_SPACING;
-  }
+//  offsetX = 15;
+//  offsetY += ROW_SPACING;
+//  for (int i = 0; i < SECOND_ROW_LENGTH; i++) {
+//    offsetX += LETTER_SPACING;
+//    keyPositions[i + FIRST_ROW_LENGTH] = new PVector(INPUT_AREA_X + offsetX, INPUT_AREA_Y + offsetY);
+//    offsetX += LETTER_SPACING;
+//  }
 
-  offsetX = 25;
-  offsetY += ROW_SPACING;
-  for (int i = 0; i < THIRD_ROW_LENGTH; i++) {
-    offsetX += LETTER_SPACING;
-    keyPositions[i + FIRST_ROW_LENGTH + SECOND_ROW_LENGTH] = new PVector(INPUT_AREA_X + offsetX, INPUT_AREA_Y + offsetY);
-    offsetX += LETTER_SPACING;
-  }
-}
+//  offsetX = 25;
+//  offsetY += ROW_SPACING;
+//  for (int i = 0; i < THIRD_ROW_LENGTH; i++) {
+//    offsetX += LETTER_SPACING;
+//    keyPositions[i + FIRST_ROW_LENGTH + SECOND_ROW_LENGTH] = new PVector(INPUT_AREA_X + offsetX, INPUT_AREA_Y + offsetY);
+//    offsetX += LETTER_SPACING;
+//  }
+//}
 
 // You can modify anything in here. This is just a basic implementation.
 void draw() {
@@ -164,9 +168,9 @@ void draw() {
     text("Target:   " + currentPhrase, 70, 100); // draw the target string
     text("Entered:  " + currentTyped, 70, 140); // draw what the user has entered thus far
     fill(255, 0, 0);
-    rect(800, 0, 200, 200); // drag next button
+    rect(1000, 100, 200, 200); // drag next button
     fill(255);
-    text("NEXT > ", 850, 100); // draw next label
+    text("NEXT > ", 1050, 200); // draw next label
   }
 
   drawKeyboard();
@@ -175,28 +179,21 @@ void draw() {
 void drawBackspace(){
   float width = SIZE_OF_INPUT_AREA / 5;
   float height = SIZE_OF_INPUT_AREA / 12;
-  textSize(18);
+  textSize(18 * DPI_SCALE);
   text("delete", INPUT_AREA_X + SIZE_OF_INPUT_AREA - width, INPUT_AREA_Y + SIZE_OF_INPUT_AREA - height);
-}
-
-void drawBack(){
-  float width = SIZE_OF_INPUT_AREA / 5;
-  float height = SIZE_OF_INPUT_AREA / 7;
-  textSize(18);
-  text("back", INPUT_AREA_X + SIZE_OF_INPUT_AREA - width, INPUT_AREA_Y + height);
 }
 
 void drawSpace(){
   float width = SIZE_OF_INPUT_AREA / 5;
   float height = SIZE_OF_INPUT_AREA / 12;
-  textSize(18);
+  textSize(18 * DPI_SCALE);
   text("space", INPUT_AREA_X + width, INPUT_AREA_Y + SIZE_OF_INPUT_AREA - height);
 }
 
 void drawLeftKeyboard(){
   fill(255);
   textAlign(CENTER);
-  textFont(createFont("Arial", 30)); // set the font to arial 24
+  textFont(createFont("Arial", 26 * DPI_SCALE)); // set the font to arial 24
 
   for (int i = 0; i < LEFT_ALPHA.length; i++) {
    //float dist = leftKeyPositions[i].dist(new PVector(mouseX, mouseY));
@@ -206,20 +203,18 @@ void drawLeftKeyboard(){
    text(LEFT_ALPHA[i], leftKeyPositions[i].x, leftKeyPositions[i].y);
   }
   drawBackspace();
-  drawBack();
   drawSpace();
 }
 
 void drawRightKeyboard(){
   fill(255);
   textAlign(CENTER);
-  textFont(createFont("Arial", 30)); // set the font to arial 30
+  textFont(createFont("Arial", 26 * DPI_SCALE)); // set the font to arial 30
 
   for (int i = 0; i < RIGHT_ALPHA.length; i++) {
    text(RIGHT_ALPHA[i], rightKeyPositions[i].x, rightKeyPositions[i].y);
   }
   drawBackspace();
-  drawBack();
   drawSpace();
 }
 
@@ -229,17 +224,18 @@ void drawKeyboard() {
   textAlign(CENTER);
   textFont(createFont("Arial", KEYBOARD_FONT_SIZE)); // set the font to arial 24
 
-  for (int i = 0; i < ALPHABET.length; i++) {
-   float dist = keyPositions[i].dist(new PVector(mouseX, mouseY));
-   if (dist <= KEY_RESIZE_THRESHOLD) {
+  drawLeftKeyboard();
+  //for (int i = 0; i < ALPHABET.length; i++) {
+  // float dist = keyPositions[i].dist(new PVector(mouseX, mouseY));
+  // if (dist <= KEY_RESIZE_THRESHOLD) {
 
-   }
-   text(ALPHABET[i], keyPositions[i].x, keyPositions[i].y);
-  }
+  // }
+  // text(ALPHABET[i], keyPositions[i].x, keyPositions[i].y);
+  //}
 
-  textFont(createFont("Arial", 24)); // set the font to arial 24
-  drawBackspace();
-  drawSpace();
+  //textFont(createFont("Arial", 24)); // set the font to arial 24
+  //drawBackspace();
+  //drawSpace();
   }
   else if (left){
    drawLeftKeyboard();
@@ -268,10 +264,10 @@ void mousePressed() {
     currentTyped = currentTyped.substring(0, currentTyped.length()-1);
   }
   else if (left){
-    if (didMouseClick(INPUT_AREA_X + half, INPUT_AREA_Y, half, 35)) {
+    if (didMouseClick(INPUT_AREA_X, INPUT_AREA_Y, SIZE_OF_INPUT_AREA, offsetY)) {
       //if clicked back
       left = false;
-      right = false;
+      right = true;
     }
     else {
       i = getNearestKeyLeft();
@@ -280,9 +276,9 @@ void mousePressed() {
   }
   
   else if (right){
-    if (didMouseClick(INPUT_AREA_X + half, INPUT_AREA_Y, half, 35)) {
+    if (didMouseClick(INPUT_AREA_X, INPUT_AREA_Y, SIZE_OF_INPUT_AREA, offsetY)) {
       //if clicked back
-      left = false;
+      left = true;
       right = false;
     }
     else {
@@ -290,21 +286,21 @@ void mousePressed() {
       currentTyped += (Character.toString(RIGHT_ALPHA[i])).toLowerCase();
     }
   }
-  else {//if full keyboard
-  // go left
-  if (didMouseClick(INPUT_AREA_X, INPUT_AREA_Y, half, 35)){
-    left = true;
-  }
-  // go right
-  if (didMouseClick(INPUT_AREA_X + half, INPUT_AREA_Y, half, 35)){
-    right = true;
-  }
-  // get nearest key
-    if (didMouseClick(INPUT_AREA_X, INPUT_AREA_Y, SIZE_OF_INPUT_AREA, SIZE_OF_INPUT_AREA)) {
-      i = getNearestKey();  
-      currentTyped += (Character.toString(ALPHABET[i])).toLowerCase();
-    }
-  }
+  //else {//if full keyboard
+  //// go left
+  //if (didMouseClick(INPUT_AREA_X, INPUT_AREA_Y, half, 35)){
+  //  left = true;
+  //}
+  //// go right
+  //if (didMouseClick(INPUT_AREA_X + half, INPUT_AREA_Y, half, 35)){
+  //  right = true;
+  //}
+  //// get nearest key
+  //  if (didMouseClick(INPUT_AREA_X, INPUT_AREA_Y, SIZE_OF_INPUT_AREA, SIZE_OF_INPUT_AREA)) {
+  //    i = getNearestKey();  
+  //    currentTyped += (Character.toString(ALPHABET[i])).toLowerCase();
+  //  }
+  //}
 }
 
 // simple function to do hit testing
@@ -344,23 +340,23 @@ int getNearestKeyRight(){
   return nearest;
 }
 
-// get the nearest key to the current mouse
-int getNearestKey() {
-  PVector origin = new PVector(mouseX, mouseY);
-  int nearest = 0;
-  float currDist = MAX_FLOAT;
+//// get the nearest key to the current mouse
+//int getNearestKey() {
+//  PVector origin = new PVector(mouseX, mouseY);
+//  int nearest = 0;
+//  float currDist = MAX_FLOAT;
 
-  for (int i = 0; i < ALPHABET.length; i++) {
-    float dist = origin.dist(keyPositions[i]);
-    if (dist < currDist) {
-      nearest = i;
-      currDist = dist;
-    }
-  }
+//  for (int i = 0; i < ALPHABET.length; i++) {
+//    float dist = origin.dist(keyPositions[i]);
+//    if (dist < currDist) {
+//      nearest = i;
+//      currDist = dist;
+//    }
+//  }
 
-  println(ALPHABET[nearest]);
-  return nearest;
-}
+//  println(ALPHABET[nearest]);
+//  return nearest;
+//}
 
 
 
