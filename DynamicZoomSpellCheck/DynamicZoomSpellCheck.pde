@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Collections;
 
 
-final static float DPI = 165.63; // For Ramya's Galaxy S6
+final static float DPI = 577; // For Ramya's Galaxy S6
 final static float BASE_DPI = 165.63; // For Roger's
 final static float DPI_Scale =  DPI / BASE_DPI;
 
@@ -22,9 +22,9 @@ final static int FIRST_ROW_LENGTH = 10;
 final static int SECOND_ROW_LENGTH = 9;
 final static int THIRD_ROW_LENGTH = 7;
 final static int ROW_SPACING = 22 * (int)DPI_Scale;
-final static int LETTER_SPACING = 8 * (int)DPI_Scale;
 final static int KEYBOARD_FONT_SIZE = 16 * (int)DPI_Scale;
-final static float KEY_RESIZE_THRESHOLD = 100 * DPI_Scale;
+final static float LETTER_SPACING = 8.5 * (int)DPI_Scale;
+final static float KEY_RESIZE_THRESHOLD = 25 * DPI_Scale;
 final static float KEYBOARD_VERTICAL_OFFSET = 80 * DPI_Scale; ///This changes based on DPI
 final static float BOTTOM_BAR_HEIGHT = 30 * DPI_Scale;
 
@@ -72,7 +72,6 @@ void setup() {
 
   orientation(PORTRAIT); // can also be LANDSCAPE -- sets orientation on android device
   size(displayWidth, displayHeight); //Sets the size of the app. You may want to modify this to your device. Many phones today are 1080 wide by 1920 tall.
-  textFont(createFont("Arial", 24)); // set the font to arial 24
   noStroke(); // my code doesn't use any strokes.
 
   setupAutoComplete();
@@ -105,7 +104,7 @@ void setupAutoComplete()
 }
 
 void setupKeyboard() {
-  float offsetX = 5 * DPI_Scale;
+  float offsetX = 7 * DPI_Scale;
   float offsetY = KEYBOARD_VERTICAL_OFFSET;
   for (int i = 0; i < FIRST_ROW_LENGTH; i++) {
     offsetX += LETTER_SPACING;
@@ -132,10 +131,10 @@ void setupKeyboard() {
 
 // You can modify anything in here. This is just a basic implementation.
 void draw() {
+  textFont(createFont("Arial", 18 * DPI_Scale)); // set the font to arial 24
   rectMode(CORNER);
   background(0); // clear background
 
-  image(loadImage("watchhand3.png"), -200, 400);
   fill(100);
   rect(INPUT_AREA_X, INPUT_AREA_Y, SIZE_OF_INPUT_AREA, SIZE_OF_INPUT_AREA); // input area should be 2" by 2"
 
@@ -155,14 +154,14 @@ void draw() {
   }
 
   if (startTime != 0) {
-    textFont(createFont("Arial", 24)); // set the font to arial 24
+    textFont(createFont("Arial", 18 * DPI_Scale)); // set the font to arial 24
 
     // you will need something like the next 10 lines in your code. Output does not have to be within the 2 inch area!
     textAlign(LEFT); // align the text left
     fill(128);
-    text("Phrase " + (currTrialNum + 1) + " of " + totalTrialNum, 70, 50); // draw the trial count
+    text("Phrase " + (currTrialNum + 1) + " of " + totalTrialNum, 70 * DPI_Scale, 50 * DPI_Scale); // draw the trial count
     fill(255);
-    text("Target:   " + currentPhrase, 70, 100); // draw the target string
+    text("Target:   " + currentPhrase, 70 * DPI_Scale, 100 * DPI_Scale); // draw the target string
 
     //Code for drawing the typed sentence
     if(millis() - time >= wait){
@@ -170,53 +169,54 @@ void draw() {
       time = millis();//also update the stored time
     }
     if(tick)
-      text("Entered:  " + currentTyped + "|", 70, 140); //draw what the user has entered thus far
+      text("Entered:  " + currentTyped + "|", 70 * DPI_Scale, 140 * DPI_Scale); //draw what the user has entered thus far
     else
-      text("Entered:  " + currentTyped, 70, 140); //draw what the user has entered thus far
+      text("Entered:  " + currentTyped, 70 * DPI_Scale, 140 * DPI_Scale); //draw what the user has entered thus far
 
     fill(255, 0, 0);
-    rect(800, 0, 200, 200); // drag next button
+    rect(displayWidth - 100 * DPI_Scale, displayHeight - (100 * DPI_Scale), 200, 200); // drag next button
     fill(255);
-    text("NEXT > ", 850, 100); // draw next label
+    text("NEXT > ", displayWidth - 100 * DPI_Scale, displayHeight - (200 * DPI_Scale)); // draw next label
   }
 
   drawSuggestions();
   drawKeyboard();
 }
 
+void drawKey(int i, boolean highlight) {
+  float dist = keyPositions[i].dist(new PVector(mouseX, mouseY));
+  float scaleFactor = 1;
+
+  if (dist <= KEY_RESIZE_THRESHOLD && mousePressed) {
+    // clamp scalingFactor between default and 3x
+    scaleFactor = constrain(-(2*log(dist)/log(20)) + 3, 1, 2);
+  }
+
+  float x = keyPositions[i].x;
+  float y = keyPositions[i].y - constrain(100 * scaleFactor - 100, 0, 35) * DPI_Scale;
+  float w = KEYBOARD_FONT_SIZE * scaleFactor;
+  float h = KEYBOARD_FONT_SIZE * 1.5 * scaleFactor;
+  stroke(0,0,0);
+  fill(highlight ? #00FF00 : #FFFFFF);
+  rect(keyPositions[i].x, y - (5 * scaleFactor), w, h);
+  noStroke();
+
+  fill(0);
+  textFont(createFont("Arial", KEYBOARD_FONT_SIZE * scaleFactor));
+  text(ALPHABET[i], keyPositions[i].x, y);
+}
+
 void drawKeyboard() {
   textAlign(CENTER);
   rectMode(CENTER);
-  char nearest = Character.toUpperCase(getNearestKey());
+
+  int nearest = getNearestKeyIndex();
   for (int i = 0; i < ALPHABET.length; i++) {
-    float dist = keyPositions[i].dist(new PVector(mouseX, mouseY));
-    float scaleFactor = 1;
-
-    if (dist <= KEY_RESIZE_THRESHOLD && mousePressed) {
-      // clamp scalingFactor between default and 3x
-      scaleFactor = constrain(-(2*log(dist)/log(20)) + 3, 1, 2);
-    }
-
-    float x = keyPositions[i].x;
-    float y = keyPositions[i].y - constrain(100 * scaleFactor - 100, 0, 35);
-    float w = KEYBOARD_FONT_SIZE * scaleFactor;
-    float h = KEYBOARD_FONT_SIZE * 1.5 * scaleFactor;
-    stroke(0,0,0);
-    if (nearest == ALPHABET[i] && mousePressed &&
-        didMouseClick(INPUT_AREA_X, INPUT_AREA_Y, SIZE_OF_INPUT_AREA, SIZE_OF_INPUT_AREA - BOTTOM_BAR_HEIGHT)) {
-      fill(#00FF00);
-    } else {
-      fill(#FFFFFF);
-    }
-    rect(keyPositions[i].x, y - (5 * scaleFactor), w, h);
-    noStroke();
-
-    fill(0);
-    textFont(createFont("Arial", KEYBOARD_FONT_SIZE * scaleFactor));
-    text(ALPHABET[i], keyPositions[i].x, y);
+    if (nearest == i) continue;
+    drawKey(i, false);
   }
-
-
+  // Draw nearest key on top of others, highlighting if possible
+  drawKey(nearest, mousePressed && didMouseClick(INPUT_AREA_X, INPUT_AREA_Y, SIZE_OF_INPUT_AREA, SIZE_OF_INPUT_AREA - BOTTOM_BAR_HEIGHT));
 
   // Backspace & spacebar boxes
   rectMode(CORNER);
@@ -226,7 +226,7 @@ void drawKeyboard() {
   rect(INPUT_AREA_X + (SIZE_OF_INPUT_AREA / 2), INPUT_AREA_Y + SIZE_OF_INPUT_AREA - BOTTOM_BAR_HEIGHT, SIZE_OF_INPUT_AREA / 2, BOTTOM_BAR_HEIGHT);
 
   // Backspace & spacebar text
-  textFont(createFont("Arial", 12)); // reset font
+  textFont(createFont("Arial", 12 * DPI_Scale)); // reset font
   rectMode(CENTER);
   fill(255);
   text("BACKSPACE", INPUT_AREA_X + SIZE_OF_INPUT_AREA / 4, INPUT_AREA_Y + SIZE_OF_INPUT_AREA - BOTTOM_BAR_HEIGHT / 3);
@@ -236,7 +236,7 @@ void drawKeyboard() {
 void drawSuggestions()
 {
   textAlign(CENTER, CENTER);
-  textFont(createFont("Arial", 12)); // reset font
+  textFont(createFont("Arial", 12 * DPI_Scale)); // reset font
 
   //drawing the container for the suggestions
     fill(255, 255, 255);
@@ -325,6 +325,10 @@ boolean didMouseClick(float x, float y, float w, float h) { return (mouseX > x &
 
 // get the nearest key to the current mouse
 char getNearestKey() {
+  return Character.toLowerCase(ALPHABET[getNearestKeyIndex()]);
+}
+
+int getNearestKeyIndex() {
   PVector origin = new PVector(mouseX, mouseY);
   int nearest = 0;
   float currDist = MAX_FLOAT;
@@ -337,7 +341,7 @@ char getNearestKey() {
     }
   }
 
-  return Character.toLowerCase(ALPHABET[nearest]);
+  return nearest;
 }
 
 //Autocorrect helper functions
