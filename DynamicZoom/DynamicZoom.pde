@@ -118,32 +118,30 @@ void drawKeyboard() {
   for (int i = 0; i < ALPHABET.length; i++) {
     float dist = keyPositions[i].dist(new PVector(mouseX, mouseY));
     float keyboardFontSize = KEYBOARD_FONT_SIZE;
-    if (dist <= KEY_RESIZE_THRESHOLD) {
-      keyboardFontSize = KEYBOARD_FONT_SIZE * 25/dist;
-      
-      if(keyboardFontSize > KEYBOARD_FONT_SIZE * 3)
-        keyboardFontSize = KEYBOARD_FONT_SIZE * 3;
-      if (keyboardFontSize < KEYBOARD_FONT_SIZE)
-        keyboardFontSize = KEYBOARD_FONT_SIZE;
+    if (dist <= KEY_RESIZE_THRESHOLD && mousePressed) {
+      // clamp font size between default and 3x
+      float scale = (KEYBOARD_FONT_SIZE * 25) / dist;
+      keyboardFontSize = max(KEYBOARD_FONT_SIZE, min(KEYBOARD_FONT_SIZE * 3, KEYBOARD_FONT_SIZE * 25/dist));
     }
-    textFont(createFont("Arial", keyboardFontSize)); // set the font to arial 24
-    
-    text(ALPHABET[i], keyPositions[i].x, keyPositions[i].y + keyboardFontSize/4);
+
+    textFont(createFont("Arial", keyboardFontSize));
+    text(ALPHABET[i], keyPositions[i].x, keyPositions[i].y - keyboardFontSize);
   }
 
-  textFont(createFont("Arial", KEYBOARD_FONT_SIZE)); // set the font to arial 24
+  textFont(createFont("Arial", KEYBOARD_FONT_SIZE)); // reset the font
 }
 
 void mousePressed() {
-
-  // Check for user input
-  if (didMouseClick(INPUT_AREA_X, INPUT_AREA_Y, SIZE_OF_INPUT_AREA, SIZE_OF_INPUT_AREA)) {
-    currentTyped+=getNearestKey();
-  }
-
   // Check if click is in next button
   if (didMouseClick(800, 00, 200, 200)) {
     nextTrial(); // if so, advance to next trial
+  }
+}
+
+void mouseReleased() {
+  // Check for user input
+  if (didMouseClick(INPUT_AREA_X, INPUT_AREA_Y, SIZE_OF_INPUT_AREA, SIZE_OF_INPUT_AREA)) {
+    currentTyped+=getNearestKey();
   }
 }
 
