@@ -168,6 +168,7 @@ void mouseReleased() {
 
   if (didMouseClick(INPUT_AREA_X, INPUT_AREA_Y + SIZE_OF_INPUT_AREA - 30, SIZE_OF_INPUT_AREA / 2, 30)) {
     // Backspace clicked
+    if (currentTyped == null || currentTyped.length() <= 0) return;
     currentTyped = currentTyped.substring(0, currentTyped.length() - 1);
   } else if (didMouseClick(INPUT_AREA_X + (SIZE_OF_INPUT_AREA / 2), INPUT_AREA_Y + SIZE_OF_INPUT_AREA - 30, SIZE_OF_INPUT_AREA / 2, 30)) {
     // Spacebar clicked
