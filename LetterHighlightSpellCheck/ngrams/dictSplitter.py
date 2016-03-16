@@ -10,8 +10,9 @@ def splitAndWrite(filename):
     countFile = open("autoCompleteCounts.txt", "w");
 
     for word in wordFreq.keys():
-        wordFile.write(word + "\n");
-        countFile.write(wordFreq[word])
+        if(wordFreq[word] > 500000):
+            wordFile.write(word + "\n");
+            countFile.write(wordFreq[word])
 
     wordFile.close();
     countFile.close();
