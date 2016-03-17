@@ -1,0 +1,109 @@
+Trials beginning! Starting timer...
+t
+o
+i
+a
+v
+o
+od
+odr
+od
+q
+questions
+question
+==================
+Phrase 1 of 4
+Target phrase: that is a very odd question
+Phrase length: 27
+User typed: that is a very odd question
+User typed length: 27
+Number of errors: 0
+Time taken on this trial: 38404.0
+Time taken since beginning: 38404.0
+==================
+s
+sh
+shi
+shiv
+i
+ia
+i
+p
+o
+on
+w
+wa
+t
+k
+w
+wa
+war
+warm
+==================
+Phrase 2 of 4
+Target phrase: shivering is one way to keep warm
+Phrase length: 33
+User typed: shivering is one way to keep warm
+User typed length: 33
+Number of errors: 0
+Time taken on this trial: 54562.0
+Time taken since beginning: 92966.0
+==================
+i
+l
+b
+ba
+bar
+baro
+a
+c
+cl
+cla
+clas
+classic
+classica
+classical
+m
+mu
+==================
+Phrase 3 of 4
+Target phrase: i like baroque and classical music
+Phrase length: 34
+User typed: i like baroque and classical music
+User typed length: 34
+Number of errors: 0
+Time taken on this trial: 48804.0
+Time taken since beginning: 141771.0
+==================
+t
+th
+the
+a
+e
+w
+wi
+win
+winn
+a
+l
+lo
+los
+lose
+==================
+Phrase 4 of 4
+Target phrase: there are winners and losers
+Phrase length: 28
+User typed: there are winners and losers
+User typed length: 28
+Number of errors: 0
+Time taken on this trial: 38465.0
+Time taken since beginning: 180236.0
+==================
+==================
+Trials complete!
+Total time taken: 180236.0
+Total letters entered: 122.0
+Total letters expected: 122.0
+Total errors entered: 0.0
+WPM: 8.122684
+==================

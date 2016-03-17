@@ -1,0 +1,111 @@
+Trials beginning! Starting timer...
+h
+he
+w
+wa
+wat
+watx
+wat
+watc
+watch
+i
+in
+a
+as
+ast
+asto
+aston
+astoni
+==================
+Phrase 1 of 4
+Target phrase: he watched in astonishment
+Phrase length: 26
+User typed: he watched in astonishment
+User typed length: 26
+Number of errors: 0
+Time taken on this trial: 36090.0
+Time taken since beginning: 36090.0
+==================
+q
+qu
+t
+th
+m
+mu
+b
+be
+a
+an
+ans
+==================
+Phrase 2 of 4
+Target phrase: question that must be answered
+Phrase length: 30
+User typed: question that must be answered
+User typed length: 30
+Number of errors: 0
+Time taken on this trial: 26512.0
+Time taken since beginning: 62602.0
+==================
+q
+qu
+qui
+quit
+w
+wh
+whi
+whil
+y
+yo
+a
+ar
+a
+ah
+==================
+Phrase 3 of 4
+Target phrase: quit while you are ahead
+Phrase length: 24
+User typed: quit while you are ahead
+User typed length: 24
+Number of errors: 0
+Time taken on this trial: 36080.0
+Time taken since beginning: 98682.0
+==================
+a
+g
+gl
+gla
+i
+in
+t
+th
+the
+thee
+the
+r
+ri
+d
+di
+dir
+dire
+direc
+direct
+directi
+==================
+Phrase 4 of 4
+Target phrase: a glance in the right direction
+Phrase length: 31
+User typed: a glance in the right direction
+User typed length: 31
+Number of errors: 0
+Time taken on this trial: 49219.0
+Time taken since beginning: 147901.0
+==================
+==================
+Trials complete!
+Total time taken: 147901.0
+Total letters entered: 111.0
+Total letters expected: 111.0
+Total errors entered: 0.0
+WPM: 9.006025
+==================

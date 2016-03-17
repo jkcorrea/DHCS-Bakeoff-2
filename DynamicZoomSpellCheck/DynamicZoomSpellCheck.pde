@@ -8,6 +8,13 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Collections;
 
+// For vibrate
+import android.content.Context;
+import android.app.Notification;
+import android.app.NotificationManager;
+NotificationManager gNotificationManager;
+Notification gNotification;
+long[] gVibrate = {0,50};
 
 final static float DPI = 577; // For Ramya's Galaxy S6
 final static float BASE_DPI = 165.63; // For Roger's
@@ -21,11 +28,11 @@ final static char[] ALPHABET = {'Q','W','E','R','T','Y','U','I','O','P','A','S',
 final static int FIRST_ROW_LENGTH = 10;
 final static int SECOND_ROW_LENGTH = 9;
 final static int THIRD_ROW_LENGTH = 7;
-final static int ROW_SPACING = 22 * (int)DPI_Scale;
+final static int ROW_SPACING = 30 * (int)DPI_Scale;
 final static int KEYBOARD_FONT_SIZE = 16 * (int)DPI_Scale;
 final static float LETTER_SPACING = 8.5 * (int)DPI_Scale;
 final static float KEY_RESIZE_THRESHOLD = 50 * DPI_Scale;
-final static float KEYBOARD_VERTICAL_OFFSET = 80 * DPI_Scale; ///This changes based on DPI
+final static float KEYBOARD_VERTICAL_OFFSET = 65 * DPI_Scale; ///This changes based on DPI
 final static float BOTTOM_BAR_HEIGHT = 30 * DPI_Scale;
 
 PVector[] keyPositions = new PVector[ALPHABET.length];
@@ -63,6 +70,20 @@ float textOffsetY = (autoHeight/autoRows)/2;
 //Autocompleter code
 protected static SuggestTree autoCompleter;
 String[] suggestions = new String[(int) autoCols * (int) autoRows];
+
+// Override the parent (super) Activity class:
+// States onCreate(), onStart(), and onStop() aren't called by the sketch.  Processing is entered
+// at the 'onResume()' state, and exits at the 'onPause()' state, so just override them as needed:
+
+void onResume() {
+  super.onResume();
+  // Create our Notification Manager:
+  gNotificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+  // Create our Notification that will do the vibration:
+  gNotification = new Notification();
+  // Set the vibration:
+  gNotification.vibrate = gVibrate;
+}
 
 
 // You can modify anything in here. This is just a basic implementation.
@@ -198,12 +219,12 @@ void drawKey(int i, boolean highlight) {
   float h = KEYBOARD_FONT_SIZE * 1.5 * scaleFactor;
   stroke(0,0,0);
   fill(highlight ? #00FF00 : #FFFFFF);
-  rect(keyPositions[i].x, y - (5 * scaleFactor), w, h);
+  rect(x, y - (5 * scaleFactor), w, h);
   noStroke();
 
   fill(0);
   textFont(createFont("Arial", KEYBOARD_FONT_SIZE * scaleFactor));
-  text(ALPHABET[i], keyPositions[i].x, y);
+  text(ALPHABET[i], x, y);
 }
 
 void drawKeyboard() {
@@ -281,6 +302,7 @@ void mouseReleased() {
     {
       if (didMouseClick(autoXPos + (i*autoWidth/autoCols), autoYPos, autoWidth/autoCols, autoHeight/autoRows + (j*autoHeight/autoRows) )) //check if clicked a suggestion
       {
+        gNotificationManager.notify(1, gNotification);
         completeWord(suggestions[i * (int)autoCols + j]);
         clearSuggestions();
         return;
@@ -290,6 +312,8 @@ void mouseReleased() {
 
   // Check for user input
   if (didMouseClick(INPUT_AREA_X, INPUT_AREA_Y, SIZE_OF_INPUT_AREA, SIZE_OF_INPUT_AREA)) {
+    gNotificationManager.notify(1, gNotification);
+
     if (didMouseClick(INPUT_AREA_X, INPUT_AREA_Y + SIZE_OF_INPUT_AREA - BOTTOM_BAR_HEIGHT, SIZE_OF_INPUT_AREA / 2, BOTTOM_BAR_HEIGHT)) {
       // Backspace clicked
       if (currentTyped == null || currentTyped.length() <= 0) return;

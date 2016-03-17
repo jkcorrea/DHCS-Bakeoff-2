@@ -1,0 +1,229 @@
+Trials beginning! Starting timer...
+a
+s
+sp
+spa
+spac
+space
+spac
+spa
+sp
+s
+g
+gl
+gla
+gl
+gla
+glan
+glanc
+glance
+glanceo
+glance
+o
+i
+in
+int
+in
+int
+int
+in
+t
+th
+the
+ther
+the
+r
+ri
+rig
+righ
+right
+f
+d
+di
+dir
+dire
+direc
+direct
+directi
+directio
+direction
+==================
+Phrase 1 of 4
+Target phrase: a glance in the right direction
+Phrase length: 31
+User typed: a glance in the right direction
+User typed length: 31
+Number of errors: 0
+Time taken on this trial: 73193.0
+Time taken since beginning: 73193.0
+==================
+i
+im
+imp
+impo
+impor
+import
+importa
+importan
+important
+n
+ne
+new
+newd
+new
+news
+a
+al
+alw
+alwa
+alway
+always
+e
+ee
+eee
+ee
+e
+e
+s
+se
+see
+t
+to
+b
+be
+l
+la
+lay
+laye
+lay
+la
+l
+lq
+lqa
+lqat
+lqa
+lq
+l
+ls
+l
+la
+lat
+==================
+Phrase 2 of 4
+Target phrase: important news always seems to be late
+Phrase length: 38
+User typed: important news always seems  to be late
+User typed length: 39
+Number of errors: 1
+Time taken on this trial: 82056.0
+Time taken since beginning: 155249.0
+==================
+i
+a
+am
+a
+al
+ale
+alet
+ale
+al
+a
+al
+ale
+al
+all
+alle
+aller
+t
+to
+tob
+tobr
+tobrr
+tobr
+tob
+to
+b
+br
+b
+be
+bee
+bees
+a
+an
+anf
+an
+a
+a
+am
+a
+an
+and
+p
+pr
+pra
+pr
+p
+pr
+pra
+pran
+pranu
+pranut
+pranu
+pran
+pra
+pr
+p
+pe
+pea
+pean
+peanu
+==================
+Phrase 3 of 4
+Target phrase: i am allergic to bees and peanuts
+Phrase length: 33
+User typed: i am allergic to bees and peanuts
+User typed length: 33
+Number of errors: 0
+Time taken on this trial: 93199.0
+Time taken since beginning: 248448.0
+==================
+p
+pr
+prp
+pr
+p
+pr
+prp
+prpo
+prp
+pr
+p
+pr
+pro
+prot
+y
+yp
+y
+yo
+you
+e
+en
+env
+==================
+Phrase 4 of 4
+Target phrase: protect your environment
+Phrase length: 24
+User typed: protect your environment
+User typed length: 24
+Number of errors: 0
+Time taken on this trial: 29463.0
+Time taken since beginning: 277911.0
+==================
+==================
+Trials complete!
+Total time taken: 277911.0
+Total letters entered: 127.0
+Total letters expected: 126.0
+Total errors entered: 1.0
+WPM: 5.4837704
+==================
