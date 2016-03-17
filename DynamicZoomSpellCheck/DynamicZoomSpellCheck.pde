@@ -15,7 +15,7 @@ final static float DPI_Scale =  DPI / BASE_DPI;
 
 final static float SIZE_OF_INPUT_AREA = DPI * 1; // aka, 1.0 inches square!
 final static int INPUT_AREA_X = 200;
-final static int INPUT_AREA_Y = 500;
+final static int INPUT_AREA_Y = 600;
 // final static char[] ALPHABET = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
 final static char[] ALPHABET = {'Q','W','E','R','T','Y','U','I','O','P','A','S','D','F','G','H','J','K','L','Z','X','C','V','B','N','M'};
 final static int FIRST_ROW_LENGTH = 10;
@@ -24,7 +24,7 @@ final static int THIRD_ROW_LENGTH = 7;
 final static int ROW_SPACING = 22 * (int)DPI_Scale;
 final static int KEYBOARD_FONT_SIZE = 16 * (int)DPI_Scale;
 final static float LETTER_SPACING = 8.5 * (int)DPI_Scale;
-final static float KEY_RESIZE_THRESHOLD = 25 * DPI_Scale;
+final static float KEY_RESIZE_THRESHOLD = 50 * DPI_Scale;
 final static float KEYBOARD_VERTICAL_OFFSET = 80 * DPI_Scale; ///This changes based on DPI
 final static float BOTTOM_BAR_HEIGHT = 30 * DPI_Scale;
 
@@ -154,7 +154,7 @@ void draw() {
   }
 
   if (startTime != 0) {
-    textFont(createFont("Arial", 18 * DPI_Scale)); // set the font to arial 24
+    textFont(createFont("Arial", 16 * DPI_Scale)); // set the font to arial 24
 
     // you will need something like the next 10 lines in your code. Output does not have to be within the 2 inch area!
     textAlign(LEFT); // align the text left
@@ -174,7 +174,7 @@ void draw() {
       text("Entered:  " + currentTyped, 70 * DPI_Scale, 140 * DPI_Scale); //draw what the user has entered thus far
 
     fill(255, 0, 0);
-    rect(displayWidth - 100 * DPI_Scale, displayHeight - (100 * DPI_Scale), 200, 200); // drag next button
+    rect(displayWidth - 100 * DPI_Scale, displayHeight - (250 * DPI_Scale), 200, 200); // drag next button
     fill(255);
     text("NEXT > ", displayWidth - 100 * DPI_Scale, displayHeight - (200 * DPI_Scale)); // draw next label
   }
@@ -189,7 +189,7 @@ void drawKey(int i, boolean highlight) {
 
   if (dist <= KEY_RESIZE_THRESHOLD && mousePressed) {
     // clamp scalingFactor between default and 3x
-    scaleFactor = constrain(-(2*log(dist)/log(20)) + 3, 1, 2);
+    scaleFactor = constrain(-(32 * log(dist) / log(2)) + 80 + (32 * log(5) / log(2)), 1, 3);
   }
 
   float x = keyPositions[i].x;
@@ -267,7 +267,7 @@ void drawSuggestions()
 
 void mousePressed() {
   // Check if click is in next button
-  if (didMouseClick(800, 00, 200, 200)) {
+  if (didMouseClick(displayWidth - 100 * DPI_Scale, displayHeight - (250 * DPI_Scale), 200, 200)) {
     currentTyped = currentTyped.trim();
     nextTrial(); // if so, advance to next trial
   }
